@@ -20,19 +20,15 @@
         <div class="admin-header-content">
             <h1>🎵 Light of Life Concert - Admin Panel</h1>
             <nav class="admin-nav">
-                <button class="nav-btn active" data-section="photos">📸 Manage Photos</button>
-                <button class="nav-btn" data-section="categories">📁 Categories</button>
-                <button class="nav-btn" data-section="upload">⬆️ Upload Photos</button>
-                
-                <nav class="admin-tabs">
-  <button data-tab="photos">📸 Photos</button>
-  <button data-tab="categories">📁 Categories</button>
-  <button data-tab="upload">⬆️ Upload</button>
-  <button data-tab="ministers">🕊️ Ministers</button>
-  <button data-tab="about">ℹ️ About</button>
-  <button data-tab="schedule">🗓️ Schedule</button>
-  <button data-tab="rsvps">🎫 RSVPs</button>
+    <button class="btn btn--tab" onclick="showSection('managePhotosSection')">🎵 Manage Photos</button>
+    <button class="btn btn--tab" onclick="showSection('categoriesSection')">🗂️ Categories</button>
+    <button class="btn btn--tab" onclick="showSection('uploadPhotosSection')">⬆️ Upload Photos</button>
+    <button class="btn btn--tab" onclick="showSection('ministersSection')">🎤 Ministers</button>
+    <button class="btn btn--tab" onclick="showSection('aboutSection')">ℹ️ About</button>
+    <button class="btn btn--tab" onclick="showSection('scheduleSection')">🗓️ Schedule</button>
+    <button class="btn btn--tab" onclick="showSection('rsvpsSection')">🎟️ RSVPs</button>
 </nav>
+
 
 <!-- Add these new tab content divs -->
 <div id="tab-ministers" class="tab hidden">
