@@ -43,6 +43,130 @@ class AdminPanel {
                 this.switchSection(e.target.dataset.section);
             });
         });
+
+// Inside the AdminPanel class
+showSection(sectionId) {
+    // Hide all sections first
+    document.querySelectorAll('.admin-section').forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Show the requested section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.style.display = 'block';
+    }
+
+    // Update active button styling (optional, but good UX)
+    document.querySelectorAll('.admin-nav .btn--tab').forEach(button => {
+        button.classList.remove('active');
+    });
+    const activeButton = document.querySelector(`button[onclick="showSection('${sectionId}')"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+}
+
+// Call showSection on initial load (e.g., show managePhotosSection by default)
+// Add this line inside the DOMContentLoaded listener, after new AdminPanel() is created
+// window.adminPanel.showSection('managePhotosSection');
+
+// Inside the AdminPanel class, or as a global function if that's your pattern
+async createCategory() {
+    const categoryName = document.getElementById('categoryName').value;
+    const categoryDescription = document.getElementById('categoryDescription').value;
+    const categoryOrder = document.getElementById('categoryOrder').value;
+
+    try {
+        const response = await fetch('/api/admin/categories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: categoryName,
+                description: categoryDescription,
+                display_order: parseInt(categoryOrder)
+            })
+        });
+        const data = await response.json();
+        if (data.success) {
+            this.showToast('Category created successfully!', 'success');
+            this.closeModal('addCategoryModal'); // Assuming you have a modal for adding categories
+            // Optionally, refresh category list if you have one
+        } else {
+            this.showToast('Error creating category: ' + data.error, 'error');
+        }
+    } catch (error) {
+        this.showToast('Network error creating category', 'error');
+        console.error('Error:', error);
+    }
+}
+
+// Add event listener for the category form (if not already present)
+// document.getElementById('addCategoryForm')?.addEventListener('submit', async (e) => {
+//     e.preventDefault();
+//     window.adminPanel.createCategory(); // Call the method on the AdminPanel instance
+// });
+
+// And for the save button in the modal
+document.getElementById('saveCategoryBtn')?.addEventListener('click', () => {
+    window.adminPanel.createCategory();
+});
+
+
+// Inside the AdminPanel class, or as a global function
+async uploadPhoto() {
+    const title = document.getElementById('photoTitle').value;
+    const description = document.getElementById('photoDescription').value;
+    const categoryId = document.getElementById('photoCategory').value;
+    const imageUrl = document.getElementById('photoImageUrl').value; // Assuming direct URL input
+    const altText = document.getElementById('photoAltText').value;
+    const isFeatured = document.getElementById('isFeatured').checked;
+
+    // Basic validation
+    if (!title || !categoryId || !imageUrl) {
+        this.showToast('Title, Category, and Image URL are required!', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/admin/photos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                description: description,
+                category_id: categoryId,
+                image_url: imageUrl,
+                alt_text: altText,
+                is_featured: isFeatured
+            })
+        });
+        const data = await response.json();
+        if (data.success) {
+            this.showToast('Photo uploaded successfully!', 'success');
+            // Clear form or redirect
+            document.getElementById('photoUploadForm').reset();
+            // Optionally, refresh photo list if you have one
+        } else {
+            this.showToast('Error uploading photo: ' + data.error, 'error');
+        }
+    } catch (error) {
+        this.showToast('Network error uploading photo', 'error');
+        console.error('Error:', error);
+    }
+}
+
+// Add event listener for the upload button
+document.getElementById('uploadBtn')?.addEventListener('click', () => {
+    window.adminPanel.uploadPhoto();
+});
+
+
+
         
         // File upload
         const fileInput = document.getElementById('fileInput');
