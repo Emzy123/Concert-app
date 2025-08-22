@@ -3,172 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Light of Life Concert Gallery</title>
+    <title>Light of Life Concert - Admin Panel</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="advanced-animations.css">
     <link rel="stylesheet" href="admin.css">
 </head>
-<body class="admin-body">
-    <!-- Preloader -->
-    <div id="preloader" class="preloader">
-        <div class="preloader-spinner"></div>
-        <p>Loading Admin Panel...</p>
-    </div>
-
-    <!-- Admin Header -->
-    <header class="admin-header">
-        <div class="admin-header-content">
+<body>
+    <header>
+        <div class="container">
             <h1>🎵 Light of Life Concert - Admin Panel</h1>
-            <nav class="admin-nav">
-    <button class="btn btn--tab" onclick="showSection('managePhotosSection')">🎵 Manage Photos</button>
-    <button class="btn btn--tab" onclick="showSection('categoriesSection')">🗂️ Categories</button>
-    <button class="btn btn--tab" onclick="showSection('uploadPhotosSection')">⬆️ Upload Photos</button>
-    <button class="btn btn--tab" onclick="showSection('ministersSection')">🎤 Ministers</button>
-    <button class="btn btn--tab" onclick="showSection('aboutSection')">ℹ️ About</button>
-    <button class="btn btn--tab" onclick="showSection('scheduleSection')">🗓️ Schedule</button>
-    <button class="btn btn--tab" onclick="showSection('rsvpsSection')">🎟️ RSVPs</button>
-</nav>
-
-
-<!-- Add these new tab content divs -->
-<div id="tab-ministers" class="tab hidden">
-  <h3>Guest Ministers</h3>
-  <form id="ministerForm">
-    <input name="name" placeholder="Name" required>
-    <textarea name="description" placeholder="Description"></textarea>
-    <input type="file" name="photo" accept="image/*">
-    <button type="submit">Add Minister</button>
-  </form>
-  <div id="ministersList"></div>
-</div>
-
-<div id="tab-about" class="tab hidden">
-  <h3>About Content</h3>
-  <form id="aboutForm">
-    <input name="title" placeholder="Title" required>
-    <textarea name="content" placeholder="Content" required></textarea>
-    <input type="file" name="photo" accept="image/*">
-    <button type="submit">Save</button>
-  </form>
-</div>
-
-<div id="tab-schedule" class="tab hidden">
-  <h3>Schedule</h3>
-  <form id="scheduleForm">
-    <input name="time" placeholder="3:00 PM" required>
-    <input name="title" placeholder="Title" required>
-    <input name="description" placeholder="Description">
-    <input name="display_order" type="number" value="0">
-    <button type="submit">Add Event</button>
-  </form>
-  <div id="scheduleList"></div>
-</div>
-
-<div id="tab-rsvps" class="tab hidden">
-  <h3>RSVPs</h3>
-  <div id="rsvpsList"></div>
-</div>
-
+            <nav>
+                <button onclick="showSection(\'managePhotosSection\')">🖼️ Manage Photos</button>
+                <button onclick="showSection(\'categoriesSection\')">🗂️ Categories</button>
+                <button onclick="showSection(\'uploadPhotosSection\')">📤 Upload Photos</button>
+                <button onclick="showSection(\'ministersSection\')">🎤 Ministers</button>
+                <button onclick="showSection(\'aboutSection\')">ℹ️ About</button>
+                <button onclick="showSection(\'scheduleSection\')">🗓️ Schedule</button>
+                <button onclick="showSection(\'rsvpsSection\')">🎟️ RSVPs</button>
+                <button onclick="window.location.href=\'login.html\'">🚪 Logout</button>
             </nav>
         </div>
     </header>
 
-    <!-- Main Admin Content -->
-    <main class="admin-main">
-        <!-- Photos Management Section -->
-        <section id="photos-section" class="admin-section active">
-            <div class="section-header">
-                <h2>📸 Photo Management</h2>
-                <div class="filters">
-                    <select id="categoryFilter" class="filter-select">
-                        <option value="all">All Categories</option>
-                    </select>
-                    <button id="refreshPhotos" class="btn btn--secondary">🔄 Refresh</button>
-                </div>
-            </div>
-            
-            <div class="photos-grid" id="adminPhotosGrid">
-                <div class="loading-spinner">Loading photos...</div>
-            </div>
-            
-            <div class="pagination-controls">
-                <button id="loadMorePhotos" class="btn btn--primary">Load More Photos</button>
+    <main class="container">
+        <!-- Manage Photos Section -->
+        <section id="managePhotosSection" class="admin-section">
+            <h2>🖼️ Manage Photos</h2>
+            <div class="photo-grid" id="photoGrid">
+                <!-- Photos will be loaded here by JavaScript -->
             </div>
         </section>
 
-        <!-- Categories Management Section -->
-        <section id="categories-section" class="admin-section">
-            <div class="section-header">
-                <h2>📁 Category Management</h2>
-                <button id="addCategoryBtn" class="btn btn--primary">➕ Add Category</button>
-            </div>
-            
-            <div class="categories-list" id="categoriesList">
-                <div class="loading-spinner">Loading categories...</div>
+        <!-- Categories Section -->
+        <section id="categoriesSection" class="admin-section" style="display: none;">
+            <h2>🗂️ Categories</h2>
+            <form id="addCategoryForm" class="admin-form">
+                <div class="form-group">
+                    <label for="categoryName">Category Name:</label>
+                    <input type="text" id="categoryName" name="name" required placeholder="e.g., Youth Ministry">
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Description:</label>
+                    <textarea id="categoryDescription" name="description" rows="2" placeholder="Brief description of this category"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="categoryOrder">Display Order:</label>
+                    <input type="number" id="categoryOrder" name="display_order" value="0" min="0">
+                </div>
+                <button type="submit" class="btn btn--primary">💾 Create Category</button>
+            </form>
+            <h3>Existing Categories</h3>
+            <div class="list-container" id="categoriesList">
+                <!-- Categories will be loaded here by JavaScript -->
             </div>
         </section>
 
         <!-- Upload Photos Section -->
-        <section id="upload-section" class="admin-section">
-            <div class="section-header">
-                <h2>⬆️ Upload New Photos</h2>
+        <section id="uploadPhotosSection" class="admin-section" style="display: none;">
+            <h2>📤 Upload Photos</h2>
+            <form id="uploadForm" class="admin-form">
+                <div class="form-group">
+                    <label for="photoTitle">Title:</label>
+                    <input type="text" id="photoTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="photoDescription">Description:</label>
+                    <textarea id="photoDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="photoCategory">Category:</label>
+                    <select id="photoCategory" name="category_id" required>
+                        <!-- Categories will be loaded here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="photoUrl">Image URL:</label>
+                    <input type="url" id="photoUrl" name="image_url" placeholder="https://example.com/image.jpg" required>
+                </div>
+                <div class="form-group">
+                    <label for="photoAltText">Alt Text:</label>
+                    <input type="text" id="photoAltText" name="alt_text">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isFeatured" name="is_featured">
+                        <span class="checkmark"></span>
+                        Featured Photo
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">📤 Upload Photo</button>
+                    <button type="button" id="cancelUpload" class="btn btn--secondary">❌ Cancel</button>
+                </div>
+            </form>
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="progressText">Uploading...</p>
             </div>
-            
-            <div class="upload-container">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📁</div>
-                    <h3>Drag & Drop Photos Here</h3>
-                    <p>Or click to select files</p>
-                    <input type="file" id="fileInput" multiple accept="image/*" hidden>
-                    <button class="btn btn--primary" onclick="document.getElementById('fileInput').click()">
-                        Choose Files
-                    </button>
+        </section>
+
+        <!-- Ministers Section -->
+        <section id="ministersSection" class="admin-section" style="display: none;">
+            <h2>🎤 Guest Ministers</h2>
+            <form id="ministerForm" class="admin-form">
+                <div class="form-group">
+                    <label for="ministerName">Name:</label>
+                    <input type="text" id="ministerName" name="name" required>
                 </div>
-                
-                <div class="upload-form" id="uploadForm" style="display: none;">
-                    <h3>Photo Details</h3>
-                    <div class="form-group">
-                        <label for="photoTitle">Title:</label>
-                        <input type="text" id="photoTitle" placeholder="Enter photo title">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="photoDescription">Description:</label>
-                        <textarea id="photoDescription" placeholder="Enter photo description" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="photoCategory">Category:</label>
-                        <select id="photoCategory" required>
-                            <option value="">Select Category</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="photoAltText">Alt Text:</label>
-                        <input type="text" id="photoAltText" placeholder="Alt text for accessibility">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="isFeatured">
-                            <span class="checkmark"></span>
-                            Featured Photo
-                        </label>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" id="uploadBtn" class="btn btn--primary">📤 Upload Photo</button>
-                        <button type="button" id="cancelUpload" class="btn btn--secondary">❌ Cancel</button>
-                    </div>
+                <div class="form-group">
+                    <label for="ministerDescription">Description:</label>
+                    <textarea id="ministerDescription" name="description" rows="3"></textarea>
                 </div>
-                
-                <div class="upload-progress" id="uploadProgress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                    <p id="progressText">Uploading...</p>
+                <div class="form-group">
+                    <label for="ministerPhotoUrl">Photo URL:</label>
+                    <input type="url" id="ministerPhotoUrl" name="photo_url" placeholder="https://example.com/minister.jpg">
                 </div>
+                <button type="submit" class="btn btn--primary">➕ Add Minister</button>
+            </form>
+            <h3>Existing Ministers</h3>
+            <div class="list-container" id="ministersList">
+                <!-- Ministers will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="aboutSection" class="admin-section" style="display: none;">
+            <h2>ℹ️ About Page Content</h2>
+            <form id="aboutForm" class="admin-form">
+                <div class="form-group">
+                    <label for="aboutTitle">Title:</label>
+                    <input type="text" id="aboutTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="aboutContent">Content:</label>
+                    <textarea id="aboutContent" name="content" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="aboutImageUrl">Image URL:</label>
+                    <input type="url" id="aboutImageUrl" name="image_url" placeholder="https://example.com/about.jpg">
+                </div>
+                <button type="submit" class="btn btn--primary">💾 Update About Page</button>
+            </form>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="scheduleSection" class="admin-section" style="display: none;">
+            <h2>🗓️ Schedule Management</h2>
+            <form id="scheduleForm" class="admin-form">
+                <div class="form-group">
+                    <label for="eventTime">Time:</label>
+                    <input type="text" id="eventTime" name="time" required placeholder="e.g., 3:00 PM">
+                </div>
+                <div class="form-group">
+                    <label for="eventTitle">Title:</label>
+                    <input type="text" id="eventTitle" name="title" required placeholder="e.g., Doors Open">
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description:</label>
+                    <textarea id="eventDescription" name="description" rows="2" placeholder="e.g., Registration and welcome"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventOrder">Display Order:</label>
+                    <input type="number" id="eventOrder" name="display_order" value="0" min="0">
+                </div>
+                <button type="submit" class="btn btn--primary">➕ Add Event</button>
+            </form>
+            <h3>Current Schedule</h3>
+            <div class="list-container" id="scheduleList">
+                <!-- Schedule will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- RSVPs Section -->
+        <section id="rsvpsSection" class="admin-section" style="display: none;">
+            <h2>🎟️ RSVPs</h2>
+            <div class="list-container" id="rsvpsList">
+                <!-- RSVPs will be loaded here by JavaScript -->
             </div>
         </section>
     </main>
@@ -185,27 +196,23 @@
                 <form id="editPhotoForm">
                     <div class="form-group">
                         <label for="editTitle">Title:</label>
-                        <input type="text" id="editTitle" required>
+                        <input type="text" id="editTitle" name="title" required>
                     </div>
-                    
                     <div class="form-group">
                         <label for="editDescription">Description:</label>
-                        <textarea id="editDescription" rows="3"></textarea>
+                        <textarea id="editDescription" name="description" rows="3"></textarea>
                     </div>
-                    
                     <div class="form-group">
                         <label for="editCategory">Category:</label>
-                        <select id="editCategory" required></select>
+                        <select id="editCategory" name="category_id" required></select>
                     </div>
-                    
                     <div class="form-group">
                         <label for="editAltText">Alt Text:</label>
-                        <input type="text" id="editAltText">
+                        <input type="text" id="editAltText" name="alt_text">
                     </div>
-                    
                     <div class="form-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="editIsFeatured">
+                            <input type="checkbox" id="editIsFeatured" name="is_featured">
                             <span class="checkmark"></span>
                             Featured Photo
                         </label>
@@ -230,17 +237,15 @@
                 <form id="addCategoryForm">
                     <div class="form-group">
                         <label for="categoryName">Category Name:</label>
-                        <input type="text" id="categoryName" required placeholder="e.g., Youth Ministry">
+                        <input type="text" id="categoryName" name="name" required placeholder="e.g., Youth Ministry">
                     </div>
-                    
                     <div class="form-group">
                         <label for="categoryDescription">Description:</label>
-                        <textarea id="categoryDescription" rows="2" placeholder="Brief description of this category"></textarea>
+                        <textarea id="categoryDescription" name="description" rows="2" placeholder="Brief description of this category"></textarea>
                     </div>
-                    
                     <div class="form-group">
                         <label for="categoryOrder">Display Order:</label>
-                        <input type="number" id="categoryOrder" value="0" min="0">
+                        <input type="number" id="categoryOrder" name="display_order" value="0" min="0">
                     </div>
                 </form>
             </div>
@@ -257,13 +262,13 @@
     <script>
 (async function ensureAdmin(){
   try{
-    const res = await fetch('/api/auth/status');
+    const res = await fetch(\'/api/auth/status\');
     const data = await res.json();
     if (!data.authenticated || !data.user?.is_admin) {
-      window.location.href = 'login.html';
+      window.location.href = \'login.html\';
     }
   }catch(e){
-    window.location.href = 'login.html';
+    window.location.href = \'login.html\';
   }
 })();
 </script>
@@ -272,4 +277,3 @@
     <script src="admin.js"></script>
 </body>
 </html>
-
