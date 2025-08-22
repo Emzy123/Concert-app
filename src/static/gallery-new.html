@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery — Light of Life Concert 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="advanced-animations.css">
+    <style>
+        /* Gallery-specific styles */
+        .gallery-container {
+            padding: 72px 0;
+            min-height: 100vh;
+        }
+        
+        .category-selector {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 0 2rem;
+        }
+        
+        .category-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f4f6fb;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-weight: 500;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 77, 126, 0.3);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #ff4d7e, #ffd166);
+            border-color: transparent;
+            color: #0b0c10;
+            font-weight: 600;
+        }
+        
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .gallery-item.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 77, 126, 0.5);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        .gallery-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #f4f6fb;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .gallery-info p {
+            margin: 0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .featured-badge {
+            background: linear-gradient(135deg, #ffd166, #ff9500);
+            color: #0b0c10;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+        
+        .no-photos {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #94a3b8;
+        }
+        
+        .no-photos-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .no-photos h3 {
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem 0;
+            color: #f4f6fb;
+        }
+        
+        .load-more-container {
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        #loadMoreBtn {
+            background: linear-gradient(135deg, #ff4d7e, #ffd166);
+            color: #0b0c10;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        #loadMoreBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 77, 126, 0.4);
+        }
+        
+        #loadMoreBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            padding: 2rem;
+        }
+        
+        .modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: modalSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .modal-image {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+        }
+        
+        .modal-info {
+            padding: 1.5rem;
+        }
+        
+        .modal-title {
+            margin: 0 0 0.5rem 0;
+            color: #f4f6fb;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .modal-description {
+            margin: 0;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: #f4f6fb;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 77, 126, 0.8);
+            transform: scale(1.1);
+        }
+        
+        /* Click ripple effect */
+        .click-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 77, 126, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            margin-left: -50px;
+            margin-top: -50px;
+        }
+        
+        /* Error toast */
+        .error-toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            z-index: 2000;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-spinner::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ff4d7e;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.8) translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .photos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .category-selector {
+                padding: 0 1rem;
+            }
+            
+            .category-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .gallery-item {
+                border-radius: 12px;
+            }
+            
+            .gallery-image {
+                height: 200px;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100vw - 2rem);
+            }
+        }
+    </style>
+</head>
+<body class="page">
+    <!-- Preloader -->
+    <div id="preloader" class="preloader" aria-hidden="false">
+        <div class="preloader__inner">
+            <div class="preloader__logo">Light of Life</div>
+            <div class="preloader__spinner" role="img" aria-label="Loading"></div>
+            <div class="preloader__sub">Gallery</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header" id="top">
+        <nav class="nav">
+            <a class="nav__brand" href="index.html">Light of Life 2026</a>
+            <div class="nav-links">
+                <a href="index.html#about">About</a>
+                <a href="index.html#lineup">Lineup</a>
+                <a href="gallery-new.html" class="active">Gallery</a>
+                <a href="index.html#schedule">Schedule</a>
+                <a href="index.html#rsvp">RSVP</a>
+                <a href="admin.html" class="admin-link" style="color: #ff4d7e;">Admin</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="section section--light gallery-container">
+            <div class="container">
+                <!-- Back to Home -->
+                <a href="index.html#gallery" class="back-btn btn btn--ghost">← Back to Home</a>
+                
+                <!-- Gallery Header -->
+                <h2 class="animate-on-scroll" data-animation="fadeInUp">Concert Gallery</h2>
+                <p class="muted animate-on-scroll" data-animation="fadeInUp" data-delay="0.2s">
+                    A collection of moments that capture the essence of our worship.
+                </p>
+
+                <!-- Category Filter -->
+                <div class="category-selector">
+                    <!-- Categories will be loaded dynamically -->
+                </div>
+
+                <!-- Photos Grid -->
+                <div class="photos-grid" id="photosContainer">
+                    <div class="loading-spinner">Loading photos...</div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="load-more-container">
+                    <button id="loadMoreBtn" style="display: none;">Load More Photos</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <small>© 2026 Light of Life Chapel — CUSTECH, Osara</small>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="animations.js"></script>
+    <script src="gallery-api.js"></script>
+    <script>
+        // Hide preloader when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 300);
+                }
+            }, 1000);
+        });
+    </script>
+    <script>
+(async function(){
+  const adminLink = document.getElementById('adminLink'); // if you have one
+  try {
+    const res = await fetch('/api/auth/status');
+    const data = await res.json();
+    if (!data.authenticated || !data.user?.is_admin) {
+      if (adminLink) adminLink.style.display = 'none';
+    }
+  } catch(e) {
+    if (adminLink) adminLink.style.display = 'none';
+  }
+})();
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Light of Life Concert 2026 — CUSTECH Osara</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="advanced-animations.css">
+</head>
+<body class="page">
+  <div id="preloader" class="preloader" aria-hidden="false">
+    <div class="preloader__inner">
+      <div class="preloader__logo">Light of Life</div>
+      <div class="preloader__spinner" role="img" aria-label="Loading"></div>
+      <div class="preloader__sub">Concert 2026 · CUSTECH Osara</div>
+    </div>
+  </div>
+
+  <header class="site-header" id="top">
+    <nav class="nav">
+      <a class="nav__brand" href="#top">Light of Life 2026</a>
+
+      <ul class="nav__links" id="navLinks" role="menubar" aria-label="Primary">
+        <li><a href="#about" role="menuitem">About</a></li>
+        <li><a href="#lineup" role="menuitem">Lineup</a></li>
+        <li><a href="#gallery" role="menuitem">Gallery</a></li>
+        <li><a href="#schedule" role="menuitem">Schedule</a></li>
+        <li><a href="#rsvp" role="menuitem">RSVP</a></li>
+      </ul>
+
+      <button id="burger" class="nav__burger" aria-controls="navOverlay" aria-expanded="false" aria-label="Open menu">☰</button>
+    </nav>
+
+    <div id="navOverlay" class="nav-overlay" aria-hidden="true">
+      <div class="nav-overlay__inner">
+        <a class="nav-overlay__link" href="#about">About</a>
+        <a class="nav-overlay__link" href="#lineup">Lineup</a>
+        <a class="nav-overlay__link" href="#gallery">Gallery</a>
+        <a class="nav-overlay__link" href="#schedule">Schedule</a>
+        <a class="nav-overlay__link" href="#rsvp">RSVP</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero__content">
+        <h1 class="hero__title">Light of Life Chapel — Concert 2026</h1>
+        <p class="hero__subtitle">Sunday • August 9, 2026 • 4:00 PM (WAT) • CUSTECH, Osara</p>
+
+        <div id="countdown" class="countdown" aria-live="polite"></div>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#rsvp">Reserve Seat</a>
+          <button id="teaserBtn" class="btn btn--ghost">Watch Teaser</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section section--light">
+      <div class="container">
+        <h2>About the Concert</h2>
+        <p class="muted">A powerful night of worship, music and ministry — uniting students and the community in praise.</p>
+        <div class="about__content">
+          <img class="about__img" src="https://images.unsplash.com/photo-1510525164883-718608e98342?w=1200&q=70&auto=format&fit=crop" alt="A large crowd attending a worship concert.">
+          <div class="about__text">
+            <p>The annual Light of Life Concert is more than just an event; it's a profound spiritual experience. We gather with one purpose: to lift up the name of Jesus and be filled with His Spirit.</p>
+            <p>Our goal is to create an atmosphere of pure worship where lives are touched, burdens are lifted, and destinies are reshaped.</p>
+            <p>Join us as we ignite our hearts and shine His light, bringing revival and hope to CUSTECH Osara and beyond.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lineup" class="section section--dark">
+      <div class="container">
+        <h2>Guest Ministers & Acts</h2>
+        <div class="cards">
+          <article class="card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1581320548351-6f8e47d8f2c6?w=1200&q=70&auto=format&fit=crop" alt="Gospel artist singing">
+            <h3>Minister Grace</h3>
+            <p class="muted">Anointed worship leader</p>
+          </article>
+
+          <article class="card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1603217187763-1a91613b2a48?w=1200&q=70&auto=format&fit=crop" alt="Worship leader">
+            <h3>Ps Daniel</h3>
+            <p class="muted">Powerful minister</p>
+          </article>
+
+          <article class="card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1520975918319-6c165344f4f0?w=1200&q=70&auto=format&fit=crop" alt="Choir">
+            <h3>Light of Life Choir</h3>
+            <p class="muted">Mass choir ministration</p>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section id="latest-photos" class="latest-photos-section">
+  <h2>Latest Photos</h2>
+  <div id="latestGrid" class="photo-grid"></div>
+</section>
+
+
+    <section id="gallery" class="section section--light">
+      <div class="container">
+        <h2>Gallery</h2>
+        <p class="muted">View more moments from past concerts.</p>
+        <div class="gallery">
+          <img loading="lazy" class="gallery__img" src="https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=1200&q=70&auto=format&fit=crop" alt="Concert lights">
+          <img loading="lazy" class="gallery__img" src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Crowd worship">
+          <img loading="lazy" class="gallery__img" src="https://images.unsplash.com/photo-1508780709619-79562169bc64?w=1200&q=70&auto=format&fit=crop" alt="Singers performing">
+        </div>
+        <div class="gallery__cta">
+          <a href="gallery-new.html" class="btn btn--primary">Open Gallery</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="schedule" class="section section--dark">
+      <div class="container">
+        <h2>Schedule</h2>
+        <ul class="timeline">
+          <li>3:00 PM — Doors Open</li>
+          <li>4:00 PM — Opening Praise</li>
+          <li>5:00 PM — Worship Session</li>
+          <li>6:30 PM — Word & Ministration</li>
+          <li>7:30 PM — Closing & Photo Moments</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="rsvp" class="section section--light">
+      <div class="container">
+        <h2>Reserve Your Seat</h2>
+        <form id="rsvpForm" class="rsvp" novalidate>
+          <input name="name" type="text" placeholder="Full name" required />
+          <input name="email" type="email" placeholder="Email address" required />
+          <input name="phone" type="tel" placeholder="Phone / WhatsApp" required />
+          <select name="type">
+            <option value="FREE">Free (Registration)</option>
+            <option value="VIP">VIP</option>
+            <option value="GROUP">Group</option>
+          </select>
+          <label><input type="checkbox" id="hasMinistration"> Request special ministration</label>
+<input type="text" id="ministrationType" placeholder="Type of ministration" style="display:none">
+
+          <div class="rsvp__group">
+            <input name="qty" type="number" min="1" max="10" value="1" aria-label="Seats" />
+            
+            <button type="submit" class="btn btn--primary">Submit RSVP</button>
+          </div>
+        </form>
+
+        <p class="rsvp__note muted">We will confirm by email/WhatsApp. Saved to your device for now.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <small>© 2026 Light of Life Chapel — CUSTECH, Osara</small>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <canvas id="confetti" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <script src="animations.js"></script>
+  <script src="script.js"></script>
+  <script>
+async function loadLatestPhotos(){
+  try{
+    const res = await fetch('/api/homepage-gallery');
+    const data = await res.json();
+    const grid = document.getElementById('latestGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    (data.photos||[]).forEach(p => {
+      const card = document.createElement('a');
+      card.href = 'gallery-new.html';
+      card.className = 'photo-card reveal fade-in';
+      card.innerHTML = `<img src="${p.url}" alt="${p.alt_text || ''}">`;
+      grid.appendChild(card);
+    });
+  }catch(e){ console.error(e); }
+}
+window.addEventListener('DOMContentLoaded', loadLatestPhotos);
+</script>
+
+</body>
+</html>

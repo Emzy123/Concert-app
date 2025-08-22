@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Light of Life Concert 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="advanced-animations.css">
+  <style>
+    /* Gallery-specific enhanced styles */
+    .gallery-container {
+      padding: 72px 0;
+    }
+    
+    .gallery-section {
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .gallery-section.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .gallery-full {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-top: 24px;
+    }
+    
+    .gallery-full__item {
+      overflow: hidden;
+      border-radius: 16px;
+      cursor: pointer;
+      position: relative;
+      background: var(--card);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+    }
+    
+    .gallery-full__item.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .gallery-full__item:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    
+    .gallery-full__item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255, 77, 126, 0.1), rgba(255, 209, 102, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+      border-radius: 16px;
+    }
+    
+    .gallery-full__item:hover::before {
+      opacity: 1;
+    }
+    
+    .gallery-full__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  filter 0.4s ease;
+      aspect-ratio: 4/3;
+      border-radius: 16px;
+    }
+    
+    .gallery-full__item:hover .gallery-full__img {
+      transform: scale(1.1);
+      filter: brightness(1.1) contrast(1.1);
+    }
+    
+    .back-btn {
+      margin-bottom: 24px;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .back-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .back-btn:hover::after {
+      left: 100%;
+    }
+    
+    /* Enhanced Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .modal.open {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    .modal__content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal__img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      transform: scale(0.7) rotateY(15deg);
+      opacity: 0;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  opacity 0.6s ease;
+    }
+    
+    .modal.open .modal__img {
+      transform: scale(1) rotateY(0deg);
+      opacity: 1;
+    }
+    
+    .modal__close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 2001;
+      opacity: 0;
+      transform: scale(0.8) rotate(90deg);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal.open .modal__close {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+    
+    .modal__close:hover {
+      background: rgba(255, 77, 126, 0.2);
+      transform: scale(1.1) rotate(90deg);
+    }
+    
+    /* Loading animation for images */
+    .gallery-full__img {
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .gallery-full__img.loaded {
+      opacity: 1;
+    }
+    
+    /* Staggered animation delays */
+    .gallery-full__item:nth-child(1) { transition-delay: 0.1s; }
+    .gallery-full__item:nth-child(2) { transition-delay: 0.2s; }
+    .gallery-full__item:nth-child(3) { transition-delay: 0.3s; }
+    .gallery-full__item:nth-child(4) { transition-delay: 0.4s; }
+    .gallery-full__item:nth-child(5) { transition-delay: 0.5s; }
+    .gallery-full__item:nth-child(6) { transition-delay: 0.6s; }
+    .gallery-full__item:nth-child(7) { transition-delay: 0.7s; }
+    .gallery-full__item:nth-child(8) { transition-delay: 0.8s; }
+    
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+      .gallery-full {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 12px;
+      }
+      
+      .modal__close {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body class="page">
+  <div id="preloader" class="preloader" aria-hidden="false">
+    <div class="preloader__inner">
+      <div class="preloader__logo">Light of Life</div>
+      <div class="preloader__spinner" role="img" aria-label="Loading"></div>
+      <div class="preloader__sub">Gallery</div>
+    </div>
+  </div>
+  
+  <header class="site-header" id="top">
+    <nav class="nav">
+      <a class="nav__brand" href="index.html">Light of Life 2026</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="section section--light gallery-container">
+      <div class="container">
+        <a href="index.html#gallery" class="back-btn btn btn--ghost">← Back to Home</a>
+        <h2>Concert Gallery</h2>
+        <p class="muted">A collection of moments that capture the essence of our worship.</p>
+        
+        <div class="gallery-section">
+          <h3>Choir Members</h3>
+          <div class="gallery-full">
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1627515159183-500b5220c571?w=1200&q=70&auto=format&fit=crop" alt="Gospel choir members singing in harmony" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1549449852-c2152a559239?w=1200&q=70&auto=format&fit=crop" alt="Gospel choir performance on stage" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1510525164883-718608e98342?w=1200&q=70&auto=format&fit=crop" alt="Large gospel choir performing in church" loading="lazy">
+            </div>
+          </div>
+        </div>
+        
+        <div class="gallery-section">
+          <h3>Praise Team</h3>
+          <div class="gallery-full">
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1581320548351-6f8e47d8f2c6?w=1200&q=70&auto=format&fit=crop" alt="Praise team on stage during worship" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1603217187763-1a91613b2a48?w=1200&q=70&auto=format&fit=crop" alt="Musicians in a Christian praise band" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1520975918319-6c165344f4f0?w=1200&q=70&auto=format&fit=crop" alt="Contemporary gospel praise team" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1508780709619-79562169bc64?w=1200&q=70&auto=format&fit=crop" alt="Praise and worship session with a band" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1513224750669-02687df34a1a?w=1200&q=70&auto=format&fit=crop" alt="Worship leader singing with the praise team" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1604515152285-d6010d1f7e34?w=1200&q=70&auto=format&fit=crop" alt="Praise team performing at a concert" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1510525164883-718608e98342?w=1200&q=70&auto=format&fit=crop" alt="Gospel musicians on stage with instruments" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Praise team in a powerful worship moment" loading="lazy">
+            </div>
+          </div>
+        </div>
+        
+        <div class="gallery-section">
+          <h3>Choir Executives</h3>
+          <div class="gallery-full">
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1563729519391-b3b3e6d8122c?w=1200&q=70&auto=format&fit=crop" alt="Choir director speaking to the group" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1581090332840-77a3d3c8c2b5?w=1200&q=70&auto=format&fit=crop" alt="Church leaders in a meeting room" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1586765792226-c2941b2e2a3c?w=1200&q=70&auto=format&fit=crop" alt="Choir executives planning an event" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1598150410776-653a99182312?w=1200&q=70&auto=format&fit=crop" alt="Gospel choir leaders leading a rehearsal" loading="lazy">
+            </div>
+            <div class="gallery-full__item">
+              <img class="gallery-full__img" src="https://images.unsplash.com/photo-1589189112995-189f7f06d86b?w=1200&q=70&auto=format&fit=crop" alt="Team of church ministers in discussion" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <div id="imageModal" class="modal">
+    <button class="modal__close" aria-label="Close modal">×</button>
+    <div class="modal__content">
+      <img id="modalImage" class="modal__img" src="" alt="Enlarged gallery image">
+    </div>
+  </div>
+  
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <canvas id="confetti" class="confetti-canvas" aria-hidden="true"></canvas>
+  
+  <footer class="footer">
+    <div class="container">
+      <small>© 2026 Light of Life Chapel — CUSTECH, Osara</small>
+    </div>
+  </footer>
+  
+  <script src="animations.js"></script>
+  <script src="script.js"></script>
+  <script>
+    (() => {
+      'use strict';
+      
+      /* Enhanced Gallery Animations */
+      const GalleryAnimations = {
+        // Initialize scroll animations for gallery
+        initScrollAnimations() {
+          const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+          };
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const element = entry.target;
+                
+                if (element.classList.contains('gallery-section')) {
+                  element.classList.add('revealed');
+                  
+                  // Animate gallery items with stagger
+                  const items = element.querySelectorAll('.gallery-full__item');
+                  items.forEach((item, index) => {
+                    setTimeout(() => {
+                      item.classList.add('revealed');
+                    }, index * 100);
+                  });
+                }
+                
+                observer.unobserve(element);
+              }
+            });
+          }, observerOptions);
+
+          // Observe gallery sections
+          document.querySelectorAll('.gallery-section').forEach(section => {
+            observer.observe(section);
+          });
+        },
+
+        // Enhanced image loading with animations
+        initImageLoading() {
+          document.querySelectorAll('.gallery-full__img').forEach(img => {
+            img.addEventListener('load', () => {
+              img.classList.add('loaded');
+            });
+            
+            // If image is already loaded (cached)
+            if (img.complete) {
+              img.classList.add('loaded');
+            }
+          });
+        },
+
+        // Add ripple effects to gallery items
+        addRippleEffects() {
+          document.querySelectorAll('.gallery-full__item').forEach(item => {
+            item.addEventListener('click', (e) => {
+              this.createRipple(item, e);
+            });
+          });
+        },
+
+        // Create ripple effect
+        createRipple(element, event) {
+          const ripple = document.createElement('span');
+          const rect = element.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          const x = event.clientX - rect.left - size / 2;
+          const y = event.clientY - rect.top - size / 2;
+          
+          ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+            z-index: 10;
+          `;
+          
+          element.style.position = 'relative';
+          element.appendChild(ripple);
+          
+          setTimeout(() => ripple.remove(), 600);
+        }
+      };
+
+      /* Enhanced Modal Logic */
+      const ModalController = {
+        init() {
+          this.modal = document.getElementById('imageModal');
+          this.modalImage = document.getElementById('modalImage');
+          this.closeBtn = document.querySelector('.modal__close');
+          this.galleryItems = document.querySelectorAll('.gallery-full__item');
+          
+          this.bindEvents();
+        },
+
+        bindEvents() {
+          // Gallery item clicks
+          this.galleryItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+              this.openModal(item);
+              GalleryAnimations.createRipple(item, e);
+            });
+            
+            // Enhanced hover effects
+            item.addEventListener('mouseenter', () => {
+              item.style.transform = 'translateY(-8px) scale(1.02) rotateY(5deg)';
+            });
+            
+            item.addEventListener('mouseleave', () => {
+              item.style.transform = 'translateY(0) scale(1) rotateY(0deg)';
+            });
+          });
+
+          // Close button
+          this.closeBtn.addEventListener('click', () => {
+            this.closeModal();
+          });
+
+          // Click outside to close
+          this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+              this.closeModal();
+            }
+          });
+
+          // Keyboard navigation
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.modal.classList.contains('open')) {
+              this.closeModal();
+            }
+          });
+        },
+
+        openModal(item) {
+          const img = item.querySelector('img');
+          const imgSrc = img.src;
+          const imgAlt = img.alt;
+          
+          this.modalImage.src = imgSrc;
+          this.modalImage.alt = imgAlt;
+          this.modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+          
+          // Add blur effect to background
+          document.querySelector('main').style.filter = 'blur(5px)';
+          document.querySelector('header').style.filter = 'blur(5px)';
+        },
+
+        closeModal() {
+          this.modal.classList.remove('open');
+          document.body.style.overflow = '';
+          
+          // Remove blur effect
+          document.querySelector('main').style.filter = '';
+          document.querySelector('header').style.filter = '';
+        }
+      };
+
+      /* Touch Feedback for Gallery */
+      function spawnTouchDot(x, y, intensity = 1) {
+        const dot = document.createElement('div');
+        dot.className = 'touch-feedback';
+        dot.style.left = x + 'px';
+        dot.style.top = y + 'px';
+        dot.style.transform = `translate(-50%, -50%) scale(${0.5 * intensity})`;
+        document.body.appendChild(dot);
+        
+        requestAnimationFrame(() => {
+          dot.style.transform = `translate(-50%, -50%) scale(${1.6 * intensity})`;
+          dot.style.opacity = '0';
+        });
+        
+        setTimeout(() => dot.remove(), 600);
+      }
+
+      // Touch feedback on pointer events
+      let lastPointer = { x: 0, y: 0, t: 0 };
+      window.addEventListener('pointermove', (e) => {
+        const now = performance.now();
+        const distance = Math.hypot(e.clientX - lastPointer.x, e.clientY - lastPointer.y);
+        
+        if (distance > 25 || now - lastPointer.t > 150) {
+          const intensity = Math.min(distance / 50, 1.2);
+          spawnTouchDot(e.clientX, e.clientY, intensity);
+          lastPointer = { x: e.clientX, y: e.clientY, t: now };
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        if (t) {
+          spawnTouchDot(t.clientX, t.clientY, 1.2);
+        }
+      }, { passive: true });
+
+      /* Initialization */
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initialize all gallery animations
+        GalleryAnimations.initScrollAnimations();
+        GalleryAnimations.initImageLoading();
+        GalleryAnimations.addRippleEffects();
+        
+        // Initialize modal
+        ModalController.init();
+        
+        // Enhanced back button
+        const backBtn = document.querySelector('.back-btn');
+        if (backBtn) {
+          backBtn.addEventListener('click', (e) => {
+            GalleryAnimations.createRipple(backBtn, e);
+          });
+        }
+        
+        console.log('🎨 Gallery animations initialized successfully');
+      });
+
+      /* Preloader with enhanced exit animation */
+      const preloader = document.getElementById('preloader');
+      setTimeout(() => {
+        if (preloader) {
+          preloader.style.transition = 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          preloader.style.opacity = '0';
+          preloader.style.transform = 'scale(1.1)';
+          preloader.setAttribute('aria-hidden', 'true');
+          
+          setTimeout(() => {
+            if (preloader && preloader.parentNode) {
+              preloader.remove();
+            }
+          }, 800);
+        }
+      }, 500);
+
+    })();
+  </script>
+</body>
+</html>
+
